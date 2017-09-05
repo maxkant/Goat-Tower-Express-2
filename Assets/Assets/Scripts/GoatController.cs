@@ -11,10 +11,10 @@ public class GoatController : MonoBehaviour {
 	private Rigidbody2D rigidBody;
 	public float speed;
 	private int grassCount = 0;
-	private int nGrass = 40;
 
 	private SpriteRenderer grassBounds;
 	private SpriteRenderer goatBounds;
+	private GoatPenManager goatPenManager; 
 
 	float verticalExtent;
 	float horizontalExtent;
@@ -24,28 +24,11 @@ public class GoatController : MonoBehaviour {
 	void Start () {
 
 		grassBounds = grass.GetComponentInChildren<SpriteRenderer>();
-		goatBounds = this.gameObject.GetComponentInChildren<SpriteRenderer>();
+		goatBounds = GetComponentInChildren<SpriteRenderer>();
 		rigidBody = GetComponent<Rigidbody2D>();
-
-		verticalExtent = Camera.main.orthographicSize;
-		horizontalExtent = verticalExtent * Screen.width / Screen.height;
-
+		goatPenManager = GameObject.Find("dirt").GetComponentInChildren<GoatPenManager>();
 		grassSizeX = grassBounds.sprite.bounds.size.x;
 		grassSizeY = grassBounds.sprite.bounds.size.y;
-
-		for (int i = 0; i < nGrass; i++) {
-
-			GameObject g = Instantiate(grass);
-			float x = (1f - 2f * Random.value) * (horizontalExtent - grassSizeX / 2f);
-			float y = (1f - 2f * Random.value) * (verticalExtent - grassSizeY / 2f);
-
-			g.transform.Translate(new Vector3(x, y, 0));
-
-		}
-
-		float goatWidth = goatBounds.sprite.bounds.size.x;
-		float goatHeight = goatBounds.sprite.bounds.size.y;
-		
 	}
 		
 	// Update is called once per frame
@@ -55,6 +38,8 @@ public class GoatController : MonoBehaviour {
 		float moveHorizontal = Input.GetAxis("Horizontal");
 		float moveVertical = Input.GetAxis("Vertical");
 
+		if (moveHorizontal > 0) { goatBounds.flipX = false;}
+		else if (moveHorizontal < 0) {goatBounds.flipX = true;}
 		Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0);
 		rigidBody.AddForce(movement * speed);
 
@@ -64,8 +49,8 @@ public class GoatController : MonoBehaviour {
 		
 		if (other.gameObject.CompareTag("grass")) {
 
-			float x = (1f - 2f * Random.value) * (horizontalExtent - grassSizeX / 2f);
-			float y = (1f - 2f * Random.value) * (verticalExtent - grassSizeY / 2f);
+			float x = goatPenManager.insideLeft + grassSizeX/2f + Random.value * (goatPenManager.insideRight - goatPenManager.insideLeft - grassSizeX);
+			float y = goatPenManager.insideBottom + grassSizeY/2f +  Random.value * (goatPenManager.insideTop - goatPenManager.insideBottom - grassSizeY);
 			other.transform.position = new Vector3(x, y, 0);
 			grassCount++;
 			countText.text = "You have eaten: " + grassCount.ToString() + " grass";
