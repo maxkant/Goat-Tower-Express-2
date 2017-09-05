@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c0d46203532c945cab5b05d2629d980b
+timeCreated: 1504478610
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - grass: {fileID: 1056478359523636, guid: f7ec4db143e354c7d8067ec83ddcdce0, type: 2}
+  - countText: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
